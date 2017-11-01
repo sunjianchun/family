@@ -21,8 +21,8 @@ def Opera_Excel(rd_filename):
             name = table.cell(1,1).value
             fellowRank = table.cell(1,4).value
             compatriotRank = table.cell(1,6).value
-            phone = table.cell(1,9).value
-            #phone = ""
+            phone = ""
+
             age = table.cell(2,2).value
             if table.cell(2,4).ctype == 3:
                 date_value = xlrd.xldate_as_tuple(table.cell(2,4).value,data.datemode)
@@ -38,12 +38,20 @@ def Opera_Excel(rd_filename):
                 p = re.compile(r'([0-9]{2,4})[^0-9]+([0-9]{1,2})')
                 match = p.match(birthday)
                 if match and len(match.groups()) == 2:
-                    birthday = match.group(1) + "-" + match.group(2) + "-01"
+                    tmp = match.group(2)
+                    if str(tmp) == "0":
+                        tmp = "01"
+                    birthday = match.group(1) + "-" + tmp + "-01"
                 else:
                     p = re.compile(r'([0-9]{2,4})[^0-9]+')
                     match = p.match(birthday)
                     if match and len(match.groups()) == 1:
                         birthday = match.group(1) + "-01-01"
+                    else:
+                        p = re.compile(r'([0-9]{2,4})')
+                        match = p.match(birthday)
+                        if match and len(match.groups()) == 1:
+                            birthday = match.group(1) + "-01-01"
 
             selfIntroduce = table.cell(3,1).value
 
@@ -59,7 +67,15 @@ def Opera_Excel(rd_filename):
 
             brothers = table.cell(6,2).value
             sisters = table.cell(7,2).value
-            children = table.cell(8,1).value
+            children1 = table.cell(8,1).value
+            children2 = table.cell(8,2).value
+            children = ""
+            if children1 != "" and children1 != None:
+                children = children1
+
+            if children2 != "" and children2 != None:
+                children = children2
+            
             remark = table.cell(9,2).value
 
             dict = {}
@@ -73,12 +89,12 @@ def Opera_Excel(rd_filename):
             dict["phone"] = phone
             if phone != "" and phone != None:
                 dict["phone"] = str(int(phone))
-            dict["age"] = str(int(age))
             if age != "" and age != None:    
                 dict["age"] = str(int(age))
             dict["dad"] = dad
             dict["mom"] = mom
-            dict["birthday"] = birthday
+            if "不详" not in birthday:
+                dict["birthday"] = birthday
             dict["selfIntroduce"] = selfIntroduce
             dict["spouseIntroduce"] = spouseIntroduce
             dict["brothers"] = brothers

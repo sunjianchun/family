@@ -20,8 +20,8 @@ type Person struct {
 	FellowRank      int         `json:"fellowRank" form:"fellowRank"`
 	Sex             string      `json:"sex" form:"sex"`
 	CompatriotRank  int         `json:"compatriotRank" form:"compatriotRank"`
-	Phone           int64       `json:"phone" form:"phone"`
-	IDCard          int64       `json:"idCard" form:"idCard"`
+	Phone           string      `json:"phone" form:"phone"`
+	IDCard          string      `json:"idCard" form:"idCard"`
 	Age             int         `json:"age" form:"age"`
 	Birthday        string      `json:"birthday" form:"birthday"`
 	SelfImageURL    string      `json:"selfImageURL" form:"selfImageURL"`
@@ -46,5 +46,9 @@ var (
 		int64(1),
 		sync.RWMutex{},
 	}
-	Query = "query"
+	Query  = "query"
+	Insert = "insert"
+	Update = "update"
+	Delete = "delete"
+	Drop   = "drop"
 )
