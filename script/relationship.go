@@ -127,7 +127,7 @@ func FindChildren(name string) []map[string]interface{} {
 }
 
 func FindAllPosterity(name string) []map[string]interface{} {
-	sql := "select * from person where dad=? order by birthday;"
+	sql := "select id, name, dad, mom, children, selfIntroduce as bio from person where dad=? order by birthday;"
 	newdb := db.NewDB(sql)
 	result := newdb.Do(conf.Query, name)
 
@@ -141,6 +141,20 @@ func FindAllPosterity(name string) []map[string]interface{} {
 				}
 			}
 		}
+	} else {
+		return nil
+	}
+	return result
+}
+
+func Tree(name string) map[string]interface{} {
+	var result = make(map[string]interface{}, 1)
+	sql := "select id, name, dad, mom, children, selfIntroduce as bio from person where id=?"
+	newdb := db.NewDB(sql)
+	response := newdb.Do(conf.Query, name)
+	if len(response) == 1 {
+		result = response[0]
+		result["children"] = FindAllPosterity(name)
 	} else {
 		return nil
 	}
