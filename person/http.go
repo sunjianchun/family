@@ -145,16 +145,15 @@ func GetChildren(c *gin.Context) {
 		return
 	}
 	result := script.FindChildren(name)
-	c.JSON(http.StatusNotFound, result)
+	c.JSON(http.StatusOK, result)
 }
 
 func GetAllPosterity(c *gin.Context) {
 	name := c.DefaultQuery("name", "")
-
 	if name == "" {
 		c.JSON(http.StatusNotFound, gin.H{"message": "name不能为空"})
 		return
 	}
-	result := script.FindAllPosterity(name)
-	c.JSON(http.StatusNotFound, result)
+	result := script.Tree(name)
+	c.JSON(http.StatusOK, result)
 }
