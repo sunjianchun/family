@@ -32,7 +32,6 @@ func (db *DB) Do(operate string, args ...interface{}) []map[string]interface{} {
 		for i, _ := range rawResult {
 			dest[i] = &rawResult[i]
 		}
-		row1 := 0
 		for rows.Next() {
 			rowResult := make(map[string]interface{}, len(colnames))
 			rows.Scan(dest...)
@@ -44,7 +43,6 @@ func (db *DB) Do(operate string, args ...interface{}) []map[string]interface{} {
 				}
 			}
 			result = append(result, rowResult)
-			row1++
 		}
 		return result
 	} else {
