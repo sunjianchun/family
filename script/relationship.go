@@ -127,12 +127,13 @@ func FindChildren(name string) []map[string]interface{} {
 }
 
 func FindAllPosterity(name string) []map[string]interface{} {
-	sql := "select id, name, dad, mom, children, selfIntroduce as bio from person where dad=? order by birthday;"
+	sql := "select name, selfIntroduce as bio, selfImageURL as image, children, dad, id from person where dad=? order by birthday;"
 	newdb := db.NewDB(sql)
 	result := newdb.Do(conf.Query, name)
 
 	if len(result) > 0 {
 		for _, value := range result {
+			value["name"] = value["name"].(string) + "         "
 			for innerkey, innervalue := range value {
 				if innerkey == "id" {
 					str := innervalue.(string)
@@ -149,11 +150,12 @@ func FindAllPosterity(name string) []map[string]interface{} {
 
 func Tree(name string) map[string]interface{} {
 	var result = make(map[string]interface{}, 1)
-	sql := "select id, name, dad, mom, children, selfIntroduce as bio from person where id=?"
+	sql := "select name, selfIntroduce as bio, selfImageURL as image, dad, id, children from person where id=?"
 	newdb := db.NewDB(sql)
 	response := newdb.Do(conf.Query, name)
 	if len(response) == 1 {
 		result = response[0]
+		result["name"] = result["name"].(string) + "        "
 		result["children"] = FindAllPosterity(name)
 	} else {
 		return nil

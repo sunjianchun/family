@@ -24,6 +24,14 @@ def Opera_Excel(rd_filename):
             phone = ""
 
             age = table.cell(2,2).value
+            if table.cell(2,2).ctype == 2:
+                age = str(int(age))
+            else:
+                p = re.compile(r'([0-9]{2,4})')
+                m = p.match(age)
+                if m:
+                    age = m.group(0)
+                table.cell(2,2).value
             if table.cell(2,4).ctype == 3:
                 date_value = xlrd.xldate_as_tuple(table.cell(2,4).value,data.datemode)
                 birthday = date(*date_value[:3]).strftime('%Y-%m-%d')
@@ -79,7 +87,7 @@ def Opera_Excel(rd_filename):
             remark = table.cell(9,2).value
 
             dict = {}
-            dict["name"] = name
+            dict["name"] = name 
             dict["fellowRank"] = fellowRank
             if fellowRank != "" and fellowRank != None:
                 dict["fellowRank"] = str(int(fellowRank))
@@ -89,8 +97,7 @@ def Opera_Excel(rd_filename):
             dict["phone"] = phone
             if phone != "" and phone != None:
                 dict["phone"] = str(int(phone))
-            if age != "" and age != None:    
-                dict["age"] = str(int(age))
+            dict["age"] = age
             dict["dad"] = dad
             dict["mom"] = mom
             if "不详" not in birthday:
@@ -104,7 +111,7 @@ def Opera_Excel(rd_filename):
 
             for k, v in dict.items():
                 dict[k] = str(v)
-            print json.dumps(dict, sort_keys=True, indent=4, separators=(',', ': '))
+
 
             
 
