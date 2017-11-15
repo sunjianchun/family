@@ -150,7 +150,7 @@ func FindAllPosterity(name string) []map[string]interface{} {
 
 func Tree(name string) map[string]interface{} {
 	var result = make(map[string]interface{}, 1)
-	sql := "select name, selfIntroduce as bio, selfImageURL as image, dad, id, children from person where id=?"
+	sql := "select name, selfIntroduce as bio, selfImageURL as image, dad, id, children from person where id=?;"
 	newdb := db.NewDB(sql)
 	response := newdb.Do(conf.Query, name)
 	if len(response) == 1 {
