@@ -28,6 +28,7 @@ type Person struct {
 	SelfIntroduce   string      `json:"selfIntroduce" form:"selfIntroduce"`
 	SpouseImageURL  string      `json:"spouseImageURL" form:"spouseImageURL"`
 	SpouseIntroduce string      `json:"spouseIntroduce" form:"spouseIntroduce"`
+	DadID           interface{} `json:"dadID" form:"dadID"`
 	Dad             interface{} `json:"dad" form:"dad"`
 	Mom             string      `json:"mom" form:"mom"`
 	Brothers        interface{} `json:"brothers" form:"brothers"`
@@ -37,6 +38,7 @@ type Person struct {
 	Generations     string      `json:"generations" form:"generations"`
 	Remark          string      `json:"remark" form:"remark"`
 	Parents         string      `json:"parents" form:"parents"`
+	Audit           string      `json:"audit" form:"audit"`
 }
 
 var (

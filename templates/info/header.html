@@ -1,0 +1,235 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>Sun | Family</title>
+    <link rel="shortcut icon" href="/static/img/facio.ico" type="image/x-icon">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="/static/css/animate.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+<link href="/static/css/colorbox.css" rel="stylesheet">
+<link href="/static/css/vaildator/jquery.validator.css" rel="stylesheet">
+<link href="/static/css/magnific/magnific-popup.css" rel="stylesheet">
+<link href="/static/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
+<link href="/static/css/plugins/dropzone/basic.css" rel="stylesheet">
+<link href="/static/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+    <script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/base.js"></script>
+
+<!-- pop windows -->
+<script src="/static/js/jquery.colorbox.js"></script>
+
+<!-- validator js -->
+<script src="/static/js/validator/jquery.validator.js"></script>
+<script src="/static/js/validator/zh_CN.js"></script>
+<script src="/static/js/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/static/js/jquery.shiftcheckbox.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/js/bootstrap-dialog.js"></script>
+    <script src="/static/js/mindmup-editabletable.js"></script>
+    <script src="/static/js/plugins/fullcalendar/moment.min.js"></script>
+    <script src="/static/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+    
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/inspinia.js"></script>
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+    
+    <!-- Peity -->
+    <script src="/static/js/plugins/peity/jquery.peity.min.js"></script>
+    
+    <!-- Peity -->
+    <script src="/static/js/demo/peity-demo.js"></script>
+    
+    <script src="/static/js/base.js"></script>
+    
+    <!-- pop windows layer-->
+    <script src="/static/js/layer/layer.js"></script>
+    
+    <!-- highcharts -->
+    <script src="/static/js/highcharts/highcharts.js"></script>
+    
+    
+    <script src="/static/js/dropzone/dropzone.js"></script>
+    <!-- active menu -->
+</head>
+<body>
+    <div id="wrapper">
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            
+<li class="nav-header">
+    <div class="dropdown profile-element">
+        <span>
+            <img alt="image" class="img-circle" width="48" height="48"
+                    
+                 src="/static/img/root.png" />
+                    
+        </span>
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <span class="clear">
+                <span class="block m-t-xs">
+                    <strong class="font-bold">系统管理员  <span
+                            style="color: #8095a8"></span></strong>
+                </span>
+                <span class="text-muted text-xs block">
+                    超级管理员 <b class="caret"></b>
+                </span>
+            </span>
+        </a>
+        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+            <li><a value="/juser/user/profile/?id=1" class="iframe_user">个人信息</a></li>
+            <li class="divider"></li>
+            <li><a href="/juser/portrait/userupload/">上传头像</a></li>
+            <li class="divider"></li>
+            <li><a href="/logout/">注销</a></li>
+        </ul>
+    </div>
+    <div class="logo-element">
+        OA
+    </div>
+</li>
+<script>
+    $(".iframe_user").on('click', function () {
+        var url = $(this).attr("value");
+        layer.open({
+            type: 2,
+            title: '个人信息',
+            maxmin: true,
+            shift: 'top',
+            border: [2, 0.3, '#1AB394'],
+            shade: [0.5, '#000000'],
+            shadeClose: true,
+            area: ['800px', '600px'],
+            content: url
+        });
+    });
+</script>
+                <li id="index">
+                   <a href="/"><i class="fa fa-dashboard"></i> <span class="nav-label">仪表盘</span><span class="label label-info pull-right"></span></a>
+                </li>
+                
+                    <li id="juser">
+                        <a><i class="fa fa-group"></i> <span class="nav-label">信息管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                                <li class="department" name="部门管理">
+                                    <a href="/info/list/">信息查询</a>
+                                </li>
+                                <li class="employees" name="在职员工管理">
+                                    <a href="/info/add">信息录入</a>
+                                </li>
+                                <li class="induction" name="入职员工管理">
+                                    <a href="/juser/induction/list">信息审核</a>
+                                </li>
+                                <li class="induction" name="入职员工管理">
+                                    <a href="/juser/induction/list">全家福</a>
+                                </li>
+                        </ul>
+                    </li>
+                
+                    <li id="jasset">
+                        <a><i class="fa fa-inbox"></i> <span class="nav-label">信息归纳图</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            
+                                <li class="asset_type" name="资产类型管理">
+                                    <a href="/info/tree?id=2940">家族树</a>
+                                </li>
+                            
+                                <li class="asset" name="资产管理">
+                                    <a href="/info/personalist">个人树</a>
+                                </li>
+                            
+                                <li class="myasset" name="个人资产">
+                                    <a href="/jasset/myasset/list/">每代图</a>
+                                </li>
+                            
+                        </ul>
+                    </li>
+                
+                   
+                
+                    <li id="jperm">
+                        <a><i class="fa fa-gears"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            
+                                <li class="email" name="邮件模板管理">
+                                    <a href="/jperm/email/list">设置</a>
+                                </li>
+                            
+                                <li class="role" name="角色管理">
+                                    <a href="/jperm/role/list/">角色管理</a>
+                                </li>
+                            
+                        </ul>
+                    </li>
+                
+        </ul>
+    </div>
+</nav>
+
+
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                
+
+<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+        <form role="search" class="navbar-form-custom" method="get" action="">
+            <div class="form-group">
+                <input type="text" placeholder="输入搜索..." class="form-control" name="search" id="top-search">
+            </div>
+        </form>
+    </div>
+    <div class="navbar-header">
+        
+    </div>
+    <ul class="nav navbar-top-links navbar-right">
+        <li>
+            <span class="m-r-sm text-muted welcome-message">
+                欢迎访问Sun Family
+                
+            </span>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                 <span class="m-r-sm text-muted welcome-message">帮助</span>
+            </a>
+        </li>
+        <li>
+            <a href="/logout/">
+                <i class="fa fa-sign-out"></i> Log out
+            </a>
+        </li>
+    </ul>
+</nav>
+</div>
+            
+
+
+<script>
+    var url_array = document.location.pathname.split("/");
+    s1 = url_array[1];
+    s2 = url_array[2];
+
+    if (s1 == ''){
+        $('#index').addClass('active')
+    } else {
+        $("#"+s1).addClass('active');
+        $('#'+s1+' .'+s2).addClass('active');
+    }
+    var res = $('.reservation').length;
+    if (res != 0){
+        $('.myres').remove();
+    }
+</script>
+{{end}}

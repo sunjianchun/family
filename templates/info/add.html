@@ -1,0 +1,186 @@
+{{template "header"}}
+<div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-10">
+            <h2>族人新增</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">仪表盘</a>
+                </li>
+                <li>
+    
+                    <a>信息管理</a>
+    
+                </li>
+    
+                <li class="active">
+                    <strong>新增成员</strong>
+                </li>
+    
+            </ol>
+        </div>
+        <div class="col-sm-2">
+        </div>
+    </div>
+    
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>新增组人信息</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post" id="userForm" class="form-horizontal" action="/juser/user/edit/?id=2">
+                            <div class="form-group  ">
+                                <label for="code" class="col-sm-2 control-label">姓名<span
+                                        class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="code" name="code" placeholder="例如：孙德先" type="text" class="form-control"
+                                           value="">
+                                </div>
+                            </div>
+    
+    
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">父亲<span class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="name" name="name" placeholder="Name" type="text" class="form-control"
+                                           value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label">母亲<span class="red-fonts">*</span></label>
+                                    <div class="col-sm-8">
+                                        <input id="name" name="name" placeholder="Name" type="text" class="form-control"
+                                               value="">
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                <label for="sex" class="col-sm-2 control-label">性别</label>
+                                <div class="col-sm-8">
+    
+                                    <select id="sex" name="sex" class="form-control m-b">
+    
+                                        <option value="男" selected>男</option>
+                                        <option value="女">女</option>
+    
+                                    </select>
+    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile" class="col-sm-2 control-label">手机</label>
+                                <div class="col-sm-8">
+                                    <input id="mobile" name="mobile" placeholder="Name" type="text" class="form-control"
+                                           value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="wechat" class="col-sm-2 control-label">微信</label>
+                                <div class="col-sm-8">
+                                    <input id="wechat" name="wechat" placeholder="Name" type="text" class="form-control"
+                                           value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <label for="wechat" class="col-sm-2 control-label">同胞行</label>
+                                    <div class="col-sm-8">
+                                        <input id="wechat" name="wechat" placeholder="Name" type="text" class="form-control"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                        <label for="wechat" class="col-sm-2 control-label">同辈总行</label>
+                                        <div class="col-sm-8">
+                                            <input id="wechat" name="wechat" placeholder="Name" type="text" class="form-control"
+                                                   value="">
+                                        </div>
+                                    </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label for="parent" class="col-sm-2 control-label">个人简历</label>
+                                <div class="col-sm-8">
+                                    <select id="parent" name="parent" class="chosen-select form-control m-b">
+                                        <option value="" selected></option>
+    
+    
+                                        <option value="3">李瑞</option>
+    
+    
+                                        <option value="4">程宇</option>
+    
+    
+                                        <option value="5">董阳</option>
+    
+    
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="job" class="col-sm-2 control-label">配偶简历<span class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="job" name="job" type="text" class="form-control" value="CTO">
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="position" class="col-sm-2 control-label">同胞兄弟<span
+                                        class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="empway" name="empway" class="chosen-select form-control m-b">
+                                        <option value="1" selected>正式</option>
+    
+    
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="entry_time" class="col-sm-2 control-label">同胞姐妹<span class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="entry_time" name="entry_time" type="date" value="2014-04-16">
+                                </div>
+                            </div>
+    
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-2 control-label">子女<span
+                                        class="red-fonts">*</span></label>
+                                <div class="col-sm-8">
+                                    <input readonly id="email" name="email" type="email" placeholder="Email"
+                                           class="form-control" value="sunjianchun@huli.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <label for="email" class="col-sm-2 control-label">备注<span
+                                            class="red-fonts">*</span></label>
+                                    <div class="col-sm-8">
+                                        <input readonly id="email" name="email" type="email" placeholder="Email"
+                                               class="form-control" value="sunjianchun@huli.com">
+                                    </div>
+                                </div>
+    
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-white"><a href="/juser/employees/list/">取消</a></button>
+                                    <button id="submit_button" class="btn btn-primary" type="submit">确认保存</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+    {{template "footer"}}

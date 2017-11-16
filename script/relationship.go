@@ -70,8 +70,8 @@ func TrimDadFieldSpace() {
 	}
 }
 
-//ReplaceDadNameToID 替换父亲的名字为id 便于后续计算关系
-func ReplaceDadNameToID() []map[string]interface{} {
+//InsertDadID 附加插入dadID 便于后续计算关系
+func InsertDadID() []map[string]interface{} {
 	var response = []map[string]interface{}{}
 	sql := "select dad, id from person;"
 	newdb := db.NewDB(sql)
@@ -107,7 +107,7 @@ func ReplaceDadNameToID() []map[string]interface{} {
 		}
 
 		if flag == true {
-			sql = "update person set dad=? where id=?"
+			sql = "update person set dadID=? where id=?"
 			newdb = db.NewDB(sql)
 			newdb.Do(conf.Update, dadID, id)
 			content[str] = "正确处理"
@@ -118,18 +118,18 @@ func ReplaceDadNameToID() []map[string]interface{} {
 	return response
 }
 
-func FindChildren(name string) []map[string]interface{} {
+func FindChildren(id string) []map[string]interface{} {
 	var result = []map[string]interface{}{}
-	sql := "select * from person where dad =? order by birthday;"
+	sql := "select * from person where dadID =? order by birthday;"
 	newdb := db.NewDB(sql)
-	result = newdb.Do(conf.Query, name)
+	result = newdb.Do(conf.Query, id)
 	return result
 }
 
-func FindAllPosterity(name string) []map[string]interface{} {
-	sql := "select name, selfIntroduce as bio, selfImageURL as image, children, dad, id from person where dad=? order by birthday;"
+func FindAllPosterity(id string) []map[string]interface{} {
+	sql := "select name, selfIntroduce as bio, selfImageURL as image, children, dadID, id from person where dadID=? order by birthday;"
 	newdb := db.NewDB(sql)
-	result := newdb.Do(conf.Query, name)
+	result := newdb.Do(conf.Query, id)
 
 	if len(result) > 0 {
 		for _, value := range result {
@@ -148,18 +148,51 @@ func FindAllPosterity(name string) []map[string]interface{} {
 	return result
 }
 
-func Tree(name string) map[string]interface{} {
+func Tree(id string) map[string]interface{} {
 	var result = make(map[string]interface{}, 1)
-	sql := "select name, selfIntroduce as bio, selfImageURL as image, dad, id, children from person where id=?;"
+	sql := "select name, selfIntroduce as bio, selfImageURL as image, dadID, id, children from person where id=?;"
 	newdb := db.NewDB(sql)
-	response := newdb.Do(conf.Query, name)
+	response := newdb.Do(conf.Query, id)
 	if len(response) == 1 {
 		result = response[0]
 		result["name"] = result["name"].(string) + "        "
-		result["children"] = FindAllPosterity(name)
+		result["children"] = FindAllPosterity(id)
 	} else {
 		return nil
 	}
 
 	return result
+}
+
+func GetGeneration(dadID string, count int, startID string) {
+	sql := "select id, name, dadID, dad from person where id=?;"
+	newdb := db.NewDB(sql)
+	result := newdb.Do(conf.Query, dadID)
+	count++
+	if len(result) == 1 {
+		value := result[0]
+		dad := value["dad"].(string)
+		fmt.Println(value["dad"].(string))
+		if dad == "" && value["name"].(string) == "孙德先" {
+			sql = "update person set generations=? where id=?;"
+			newdb = db.NewDB(sql)
+			result = newdb.Do(conf.Update, count, startID)
+			count = 0
+		} else if dad == "" && value["name"].(string) != "孙德先" {
+			fmt.Printf("id为%s的族人，计算代数出错，出错祖先的id: %s name: %s", startID, value["id"].(string), value["name"].(string))
+		} else {
+			GetGeneration(value["dadID"].(string), count, startID)
+		}
+	}
+}
+
+func InsertGeneration() {
+	sql := "select id, name, dadID, dad from person order by birthday;"
+	newdb := db.NewDB(sql)
+	result := newdb.Do(conf.Query)
+	if len(result) > 0 {
+		for _, value := range result {
+			GetGeneration(value["dadID"].(string), 1, value["id"].(string))
+		}
+	}
 }

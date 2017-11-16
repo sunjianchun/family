@@ -13,6 +13,7 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(middleware.Logger())
+	router.LoadHTMLGlob("templates/*/*")
 
 	//person相关路由
 	p := router.Group("/api/person")
@@ -26,8 +27,13 @@ func main() {
 
 	//page info相关路由
 	info := router.Group("/info")
+	info.GET("/get", inner_http.PersonDetail)
+	info.GET("/list", inner_http.PersonList)
+	info.GET("/add", inner_http.PersonAdd)
+	info.GET("/personalist", inner_http.PersonalList)
+	info.GET("/tree", inner_http.InfoTree)
 
-	info.StaticFile("/list", "./templates/info/list.html")
+	info.StaticFile("/dashboard", "./templates/dashboard.html")
 
 	//oauth2相关路由
 	o := router.Group("/oauth2")
@@ -35,9 +41,7 @@ func main() {
 	router.GET("/index", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "welcome to sunshijiapu.com.cn"})
 	})
-	router.StaticFS("/raoumer", http.Dir("raoumer"))
 	router.StaticFS("/static", http.Dir("static"))
-	router.StaticFile("/dashboard", "./templates/dashboard.html")
 
 	router.Run(":8888")
 }

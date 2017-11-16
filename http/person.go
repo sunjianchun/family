@@ -30,7 +30,7 @@ func List(c *gin.Context) {
 		}
 	}
 	if sql != "" {
-		sql = "select * from person where " + sql + " order by birthday;"
+		sql = "select * from person where " + sql + " order by generations, birthday;"
 		newDB := db.NewDB(sql)
 		result := newDB.Do(conf.Query)
 		if len(result) != 0 {
@@ -139,29 +139,30 @@ func Import(c *gin.Context) {
 }
 
 func Flush(c *gin.Context) {
-	go script.TrimNameSpace()
-	go script.TrimDadFieldSpace()
-	res := script.ReplaceDadNameToID()
-	c.JSON(http.StatusNotFound, res)
+	//go script.TrimNameSpace()
+	//go script.TrimDadFieldSpace()
+	//res := script.InsertDadID()
+	//c.JSON(http.StatusNotFound, res)
+	go script.InsertGeneration()
 }
 
 func GetChildren(c *gin.Context) {
-	name := c.DefaultQuery("name", "")
+	id := c.DefaultQuery("id", "")
 
-	if name == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "name不能为空"})
+	if id == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "id不能为空"})
 		return
 	}
-	result := script.FindChildren(name)
+	result := script.FindChildren(id)
 	c.JSON(http.StatusOK, result)
 }
 
 func GetAllPosterity(c *gin.Context) {
-	name := c.DefaultQuery("name", "")
-	if name == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "name不能为空"})
+	id := c.DefaultQuery("id", "")
+	if id == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "id不能为空"})
 		return
 	}
-	result := script.Tree(name)
+	result := script.Tree(id)
 	c.JSON(http.StatusOK, result)
 }
