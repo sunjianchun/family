@@ -5,20 +5,28 @@ import (
 	"family/middleware"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	store := sessions.NewCookieStore([]byte("secret"))
+	store.Options(sessions.Options{MaxAge: 3600})
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	router.Use(sessions.Sessions("mySession", store))
+	router.Use(middleware.Login())
 	router.Use(middleware.Logger())
+	router.StaticFS("/static", http.Dir("static"))
 	router.LoadHTMLGlob("templates/*/*")
 
 	//person相关路由
 	p := router.Group("/api/person")
 	p.GET("/get", inner_http.Get)
 	p.GET("/list", inner_http.List)
+	p.POST("/add", inner_http.Add)
+	p.GET("/getUserInfo", inner_http.GetUserInfo)
 	p.GET("/import", inner_http.Import)
 
 	p.GET("/flush", inner_http.Flush)
@@ -32,16 +40,22 @@ func main() {
 	info.GET("/add", inner_http.PersonAdd)
 	info.GET("/personalist", inner_http.PersonalList)
 	info.GET("/tree", inner_http.InfoTree)
+	info.GET("/flexible", inner_http.Infoflexible)
 
-	info.StaticFile("/dashboard", "./templates/dashboard.html")
+	//dashboard相关路由
+	dashboard := router.Group("/dashboard")
+	dashboard.GET("/", inner_http.DashBoardIndex)
 
 	//oauth2相关路由
 	o := router.Group("/oauth2")
 	o.GET("/showcode", inner_http.ShowCode)
-	router.GET("/index", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "welcome to sunshijiapu.com.cn"})
-	})
-	router.StaticFS("/static", http.Dir("static"))
+
+	//login
+	router.GET("/login", inner_http.Login)
+	router.POST("/login", inner_http.Login)
+	router.GET("/logout", inner_http.Logout)
+	//404
+	router.GET("/notfound", inner_http.NotFound)
 
 	router.Run(":8888")
 }

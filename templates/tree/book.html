@@ -1,0 +1,112 @@
+ {{template "header"}}
+ 
+ <script src="/static/tree/bower_components/jquery/dist/jquery.min.js"></script>
+      <script src="/static/tree/bower_components/handlebars/handlebars.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="/static/tree/style/book.css">
+      <input type="text" id="search" placeholder="Find a person by name..."></input>
+      <h2 class="text-navy">伸缩图</h2>
+      <hr>
+      <h3 class="text-navy">点击图片伸缩绘图</h3>
+      <div id="tree">
+      </div>
+      <script id="person-template" type="text/x-handlebars-template">
+ 
+        <div class="person">
+          
+            <img src="/static/tree/images/placeholder.png">
+          
+          JS_FLAG_START#if childrenJS_FLAG_END
+            <span class="expand">+JS_FLAG_STARTchildren.lengthJS_FLAG_END</span>
+            JS_FLAG_START/ifJS_FLAG_END
+          <div class="name-and-bio">
+          <h2 class="name">
+              JS_FLAG_START#if english-nameJS_FLAG_END
+              JS_FLAG_STARTenglish-nameJS_FLAG_END
+              JS_FLAG_STARTelseJS_FLAG_END
+              JS_FLAG_STARTnameJS_FLAG_END
+              JS_FLAG_START/ifJS_FLAG_END
+          </h2>
+          <p class="bio">{JS_FLAG_STARTbioJS_FLAG_END}</p>
+          </div>
+          JS_FLAG_START#each childrenJS_FLAG_END
+            <div class="child">
+                JS_FLAG_START> personJS_FLAG_END
+            </div>
+            JS_FLAG_START/eachJS_FLAG_END
+        </div>
+        
+        
+      </script>
+      <script>
+        $(document).ready(function() {
+          var book_html = $("#person-template").html();
+          book_html = book_html.replace(/JS_FLAG_START/g, "\{\{");
+          book_html = book_html.replace(/JS_FLAG_END/g, "\}\}");
+          $("#person-template").html(book_html);
+          var jsonPath = "/api/person/getPosterity?id={{.userID}}";
+          var context;
+        
+          var publicTree;
+          var running = 1; // number of running asynchronous functions
+          
+          function parseTree (tree, replace) {
+            if (typeof replace != "undefined") {
+              replace.children = tree.children;
+              parseTree(tree);
+            } else if (tree.source) {
+              running++;
+              $.getJSON(tree.source, function(treeData) {
+                running--;
+                parseTree(treeData, tree)
+              });
+            } else if (tree.children) {
+              $(tree.children).each(function(){
+                parseTree(this)
+              });
+            }
+          }
+        
+          $.getJSON(jsonPath, function(treeData) {
+            publicTree = treeData;
+            parseTree(publicTree);
+            running--;
+          });
+        
+        
+          function checkIfDone(){
+            if (running > 0)
+              setTimeout(checkIfDone,100);
+            else
+              drawTree(publicTree);
+          }
+          checkIfDone();
+        
+        
+          function drawTree(data) {
+            context = data;
+        
+            //$("h2").html("伸缩图");
+        
+            var source   = $("#person-template").html();
+            Handlebars.registerPartial("person", $("#person-template").html());
+            var template = Handlebars.compile(source);
+            var html     = template(context);
+            $("#tree").html(html);
+        
+            $(".person").on("click", "img, .expand", function(e) {
+              $(this).siblings(".child").slideToggle();
+        
+              // If you want to keep the bios hidden until clicked
+              // $(this).siblings(".name-and-bio").find(".bio").slideToggle();
+        
+              if ($(this).hasClass("expand"))
+                $(this).fadeToggle();
+              else
+                $(this).siblings(".expand").fadeToggle();
+              e.stopPropagation();
+            });
+          };
+        });
+        
+      </script>
+    {{template "footer"}}

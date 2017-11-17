@@ -2,10 +2,12 @@ package middleware
 
 import (
 	"family/conf"
+	"net/http"
 	"os"
 	"path"
 	"time"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -33,8 +35,11 @@ func Logger() gin.HandlerFunc {
 		httpMethod := c.Request.Method
 		path := c.Request.URL.Path
 		raw := c.Request.URL.RawQuery
+		contentType := c.ContentType()
+
 		//执行
 		c.Next()
+		c.Header("Content-Type", contentType)
 		if raw != "" {
 			path = path + "?" + raw
 		}
@@ -53,11 +58,27 @@ func Logger() gin.HandlerFunc {
 		if code == 200 || code == 301 || code == 302 {
 			contextLogger.Info()
 		} else if code == 404 {
+			//if strings.Contains(contentType, "text/html") {
+			c.Redirect(http.StatusMovedPermanently, "/notfound")
+			//}
 			contextLogger.Warn()
+			return
 		} else if code == 403 || code == 500 || code == 502 {
 			contextLogger.Error()
 		} else {
 			contextLogger.Info()
 		}
+	}
+}
+
+//Login 登录
+func Login() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		userID := session.Get("userID")
+		if userID == nil && c.Request.URL.Path != "/login" {
+			c.Redirect(http.StatusMovedPermanently, "/login")
+		}
+
 	}
 }

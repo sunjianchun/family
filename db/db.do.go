@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"family/conf"
 	"family/util"
+	"strconv"
 )
 
 //Do 数据库操作函数
@@ -49,11 +50,33 @@ func (db *DB) Do(operate string, args ...interface{}) []map[string]interface{} {
 		stmt, err := db.Conn.Prepare(db.QueryStr)
 		util.Dealerr(err, util.Return)
 		if len(args) > 0 {
-			_, err = stmt.Exec(args...)
+			var res sql.Result
+			res, err := stmt.Exec(args...)
+			util.Dealerr(err, util.Return)
+			if operate == conf.Insert {
+				id, err := res.LastInsertId()
+				util.Dealerr(err, util.Return)
+				var result = []map[string]interface{}{}
+				var innerRes = make(map[string]interface{})
+				innerRes["lastInsertId"] = strconv.FormatInt(id, 10)
+				result = append(result, innerRes)
+				return result
+			}
 		} else {
-			_, err = stmt.Exec()
+			var res sql.Result
+			res, err := stmt.Exec()
+			util.Dealerr(err, util.Return)
+			if operate == conf.Insert {
+				id, err := res.LastInsertId()
+				util.Dealerr(err, util.Return)
+				var result = []map[string]interface{}{}
+				var innerRes = make(map[string]interface{})
+				innerRes["lastInsertId"] = strconv.FormatInt(id, 10)
+				result = append(result, innerRes)
+				return result
+			}
 		}
-		util.Dealerr(err, util.Return)
+
 	}
 	return nil
 }

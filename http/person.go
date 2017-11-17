@@ -11,8 +11,16 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
+
+func NotNullReturn(c *gin.Context, name string, value string) {
+	if value == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": name + "不能为空"})
+		return
+	}
+}
 
 func List(c *gin.Context) {
 	ids := c.DefaultQuery("ids", "")
@@ -63,6 +71,47 @@ func Get(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "未找到族人"})
 	}
+}
+
+func Add(c *gin.Context) {
+	var person conf.Person
+	err := c.ShouldBind(&person)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+	sql := "select name from person where id=?;"
+	newdb := db.NewDB(sql)
+	result := newdb.Do(conf.Query, person.DadID)
+
+	if len(result) == 1 {
+		person.Dad = result[0]["name"].(string)
+	} else {
+		person.Dad = ""
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+		return
+	}
+	files := form.File["image"]
+
+	for _, file := range files {
+		if err := c.SaveUploadedFile(file, file.Filename); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+			return
+		}
+	}
+
+	sql = "insert into person(name, fellowRank, sex, compatriotRank, phone, idCard, age, birthday, selfIntroduce, spouseIntroduce, dadID, dad, mom, brothers, sisters, children, status, remark, email, password) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+	newdb = db.NewDB(sql)
+	result = newdb.Do(conf.Insert, person.Name, person.FellowRank, person.Sex, person.CompatriotRank, person.Phone, person.IDCard, person.Age, person.Birthday, person.SelfIntroduce, person.SpouseIntroduce, person.DadID, person.Dad, person.Mom, person.Brothers, person.Sisters, person.Children, person.Status, person.Remark, person.Email, util.Md5Encode("zaqzaqzaq"))
+	if len(result) == 1 {
+		fmt.Println("in")
+		lastInsertId := result[0]["lastInsertId"]
+		script.GetGeneration(person.DadID, 1, lastInsertId.(string))
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "新增成功"})
 }
 
 func Import(c *gin.Context) {
@@ -139,10 +188,10 @@ func Import(c *gin.Context) {
 }
 
 func Flush(c *gin.Context) {
-	//go script.TrimNameSpace()
-	//go script.TrimDadFieldSpace()
-	//res := script.InsertDadID()
-	//c.JSON(http.StatusNotFound, res)
+	go script.TrimNameSpace()
+	go script.TrimDadFieldSpace()
+	res := script.InsertDadID()
+	c.JSON(http.StatusNotFound, res)
 	go script.InsertGeneration()
 }
 
@@ -165,4 +214,21 @@ func GetAllPosterity(c *gin.Context) {
 	}
 	result := script.Tree(id)
 	c.JSON(http.StatusOK, result)
+}
+
+func GetUserInfo(c *gin.Context) {
+	session := sessions.Default(c)
+	userID := session.Get("userID")
+	if userID == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no auth"})
+	} else {
+		sql := "select * from person where id=?;"
+		newdb := db.NewDB(sql)
+		result := newdb.Do(conf.Query, userID)
+		if len(result) > 0 {
+			c.JSON(http.StatusOK, result[0])
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "not found"})
+		}
+	}
 }

@@ -22,7 +22,7 @@
     <script src="/static/js/jquery-2.1.1.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/base.js"></script>
-
+<script src="/static/js/plugins/chosen/chosen.jquery.js"></script>
 <!-- pop windows -->
 <script src="/static/js/jquery.colorbox.js"></script>
 
@@ -77,12 +77,12 @@
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
             <span class="clear">
                 <span class="block m-t-xs">
-                    <strong class="font-bold">系统管理员  <span
+                    <strong class="font-bold"> <span
                             style="color: #8095a8"></span></strong>
-                </span>
+                </span><!--
                 <span class="text-muted text-xs block">
                     超级管理员 <b class="caret"></b>
-                </span>
+                </span>-->
             </span>
         </a>
         <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -114,7 +114,7 @@
     });
 </script>
                 <li id="index">
-                   <a href="/"><i class="fa fa-dashboard"></i> <span class="nav-label">仪表盘</span><span class="label label-info pull-right"></span></a>
+                   <a href="/dashboard"><i class="fa fa-dashboard"></i> <span class="nav-label">仪表盘</span><span class="label label-info pull-right"></span></a>
                 </li>
                 
                     <li id="juser">
@@ -127,45 +127,70 @@
                                     <a href="/info/add">信息录入</a>
                                 </li>
                                 <li class="induction" name="入职员工管理">
-                                    <a href="/juser/induction/list">信息审核</a>
+                                    <a href="/info/check">信息审核</a>
                                 </li>
                                 <li class="induction" name="入职员工管理">
-                                    <a href="/juser/induction/list">全家福</a>
+                                    <a href="/info/response">信息纠错</a>
                                 </li>
                         </ul>
                     </li>
                 
                     <li id="jasset">
-                        <a><i class="fa fa-inbox"></i> <span class="nav-label">信息归纳图</span><span class="fa arrow"></span></a>
+                        <a><i class="fa fa-inbox"></i> <span class="nav-label">图形管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            
                                 <li class="asset_type" name="资产类型管理">
-                                    <a href="/info/tree?id=2940">家族树</a>
+                                    <a href="/info/tree?id=2940">树形图</a>
                                 </li>
-                            
+                                <li class="asset_type" name="资产类型管理">
+                                        <a href="/info/flexible?id=2940">伸缩图</a>
+                                </li>
                                 <li class="asset" name="资产管理">
-                                    <a href="/info/personalist">个人树</a>
+                                    <a href="/info/personalist">个人图</a>
                                 </li>
-                            
-                                <li class="myasset" name="个人资产">
-                                    <a href="/jasset/myasset/list/">每代图</a>
+                                <li class="induction" name="入职员工管理">
+                                    <a href="/juser/familyImage">全家福</a>
                                 </li>
-                            
                         </ul>
                     </li>
                 
-                   
-                
+                    <li id="jasset">
+                            <a><i class="fa fa-list"></i> <span class="nav-label">文学作品</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                    <li class="asset_type" name="资产类型管理">
+                                        <a href="/literary/articles">跋文</a>
+                                    </li>
+                                    <li class="asset_type" name="资产类型管理">
+                                            <a href="/literary/poems">诗歌</a>
+                                        </li>
+                                    <li class="asset" name="资产管理">
+                                        <a href="/literary/preface">前言</a>
+                                    </li>
+                                    <li class="induction" name="入职员工管理">
+                                        <a href="/literary/postscript">后记</a>
+                                    </li>
+                            </ul>
+                        </li>
+                        <li id="jasset">
+                                <a><i class="fa fa-edit"></i> <span class="nav-label">交流中心</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                        <li class="asset_type" name="资产类型管理">
+                                            <a href="/chart/say">畅所欲言</a>
+                                        </li>
+                                        <li class="induction" name="入职员工管理">
+                                            <a href="/chart/advice">意见建议</a>
+                                        </li>
+                                </ul>
+                            </li>
                     <li id="jperm">
                         <a><i class="fa fa-gears"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             
                                 <li class="email" name="邮件模板管理">
-                                    <a href="/jperm/email/list">设置</a>
+                                    <a href="/setting/">设置</a>
                                 </li>
                             
                                 <li class="role" name="角色管理">
-                                    <a href="/jperm/role/list/">角色管理</a>
+                                    <a href="/setting/perm">角色管理</a>
                                 </li>
                             
                         </ul>
@@ -217,6 +242,13 @@
 
 
 <script>
+    $.getJSON("/api/person/getUserInfo", function(data) {
+        if(data.message == null || data.message == ""){
+            $(".font-bold").html(data.name);
+        }else {
+            $(".font-bold").html("&nbsp"+data.message);
+        }
+    });
     var url_array = document.location.pathname.split("/");
     s1 = url_array[1];
     s2 = url_array[2];

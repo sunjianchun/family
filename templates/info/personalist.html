@@ -87,7 +87,6 @@
                                     <th class="text-center">出生年月</th>
                                     <th class="text-center">父亲</th>
                                     <th class="text-center">母亲</th>
-                                    <th class="text-center">联系电话</th>
                                     <th class="text-center">代数</th>
                                     <th class="text-center">操作</th>
                                 </tr>
@@ -110,7 +109,7 @@
                     if (field.mom != undefined && field.mom.length > 10) {
                         field.mom = field.mom.substr(0,6);
                     }
-                        html += '<tr><td class=\"text-center\"><input type=\"checkbox\" id=\"check_all\" ></td><td class=\"text-center\">' + (i+1) + '</td><td class=\"text-center\">' + field.name + '</td><td class=\"text-center\">' + field.fellowRank + '</td><td class=\"text-center\">' + field.compatriotRank  + '</td><td class=\"text-center\">' + field.sex + '</td><td class=\"text-center\">' + field.age + '</td><td class=\"text-center\">' + field.birthday + '</td><td class=\"text-center\">' + field.dad + '</td><td class=\"text-center\">' + field.mom + '</td><td class=\"text-center\">' + field.phone + '</td><td class=\"text-center\">' + field.generations + '</td><td class=\"text-center\"><a href=\"/info/tree?id=' + field.id + '\" class=\"btn btn-xs btn-primary\">查看个人树</a></td></tr>'
+                        html += '<tr><td class=\"text-center\"><input type=\"checkbox\" id=\"check_all\" ></td><td class=\"text-center\">' + (i+1) + '</td><td class=\"text-center\">' + field.name + '</td><td class=\"text-center\">' + field.fellowRank + '</td><td class=\"text-center\">' + field.compatriotRank  + '</td><td class=\"text-center\">' + field.sex + '</td><td class=\"text-center\">' + field.age + '</td><td class=\"text-center\">' + field.birthday + '</td><td class=\"text-center\">' + field.dad + '</td><td class=\"text-center\">' + field.mom + '</td><td class=\"text-center\">' + field.generations + '</td><td class=\"text-center\"><a href=\"/info/tree?id=' + field.id + '\" class=\"btn btn-xs btn-primary\">树形图</a>&nbsp<a href=\"/info/flexible?id=' + field.id + '\" class=\"btn btn-xs btn-warning\">伸缩图</a></td></tr>'
                 });
                 
                 $("#user_form_tbody").html(html);
