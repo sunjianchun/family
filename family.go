@@ -55,7 +55,7 @@ func main() {
 	router.POST("/login", inner_http.Login)
 	router.GET("/logout", inner_http.Logout)
 	//404
-	router.GET("/notfound", inner_http.NotFound)
+	router.GET("/notfound1", inner_http.NotFound)
 
 	router.Run(":8888")
 }

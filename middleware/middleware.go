@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"family/conf"
+	"fmt"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -34,9 +36,9 @@ func Logger() gin.HandlerFunc {
 		timeStartStr := time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05")
 		httpMethod := c.Request.Method
 		path := c.Request.URL.Path
+
 		raw := c.Request.URL.RawQuery
 		contentType := c.ContentType()
-
 		//执行
 		c.Next()
 		c.Header("Content-Type", contentType)
@@ -58,9 +60,12 @@ func Logger() gin.HandlerFunc {
 		if code == 200 || code == 301 || code == 302 {
 			contextLogger.Info()
 		} else if code == 404 {
-			//if strings.Contains(contentType, "text/html") {
-			c.Redirect(http.StatusMovedPermanently, "/notfound")
-			//}
+			fmt.Println(c.Request.Referer())
+			fmt.Println(contentType)
+
+			if strings.Contains(contentType, "text/html") {
+				c.Redirect(http.StatusMovedPermanently, "/notfound1")
+			}
 			contextLogger.Warn()
 			return
 		} else if code == 403 || code == 500 || code == 502 {
@@ -76,7 +81,7 @@ func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		userID := session.Get("userID")
-		if userID == nil && c.Request.URL.Path != "/login" {
+		if userID == nil && c.Request.URL.Path != "/login" && !strings.Contains(c.Request.URL.Path, "/static") {
 			c.Redirect(http.StatusMovedPermanently, "/login")
 		}
 
